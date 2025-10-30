@@ -1,0 +1,6 @@
+# True MCP requirements for agent-to-agent communication
+bedrock-agentcore
+strands-agents
+boto3>=1.40.0
+pydantic>=2.11.0
+mcp>=1.17.1

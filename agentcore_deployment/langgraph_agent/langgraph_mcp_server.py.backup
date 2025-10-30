@@ -1,0 +1,380 @@
+"""
+LangGraph Kitchen Analysis Agent - MCP Server Implementation
+Provides kitchen analysis capabilities via Model Context Protocol.
+"""
+
+import sys
+import os
+import json
+import logging
+from typing import List, Dict, Any, Optional
+from pydantic import BaseModel
+from enum import Enum
+
+# Add the mcp_base directory to path for imports
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mcp_base'))
+
+from mcp_server_base import AgentCoreMCPServer, create_success_response, create_error_response
+from langgraph.graph import StateGraph, MessagesState
+from langgraph.prebuilt import ToolNode, tools_condition
+from langchain_core.tools import tool
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_aws import ChatBedrock
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+class MaterialType(str, Enum):
+    WOOD = "wood"
+    GRANITE = "granite" 
+    TILE = "tile"
+    STAINLESS_STEEL = "stainless_steel"
+    VINYL = "vinyl"
+    LAMINATE = "laminate"
+    UNKNOWN = "unknown"
+
+
+class DetectedObject(BaseModel):
+    name: str
+    confidence: float
+    bbox: List[int]  # [x, y, w, h]
+
+
+class MaterialInfo(BaseModel):
+    material_type: MaterialType
+    area_sqm: float
+    location: str
+
+
+class LangGraphKitchenMCPServer:
+    """MCP Server implementation for LangGraph Kitchen Analysis Agent"""
+    
+    def __init__(self, region: str = "us-west-2"):
+        self.region = region
+        
+        # Initialize the MCP server
+        self.mcp_server = AgentCoreMCPServer(
+            agent_name="LangGraph Kitchen Analyzer",
+            description="Kitchen analysis with YOLO detection and Bedrock AI for renovation planning"
+        )
+        
+        # Initialize LangGraph components
+        self._initialize_langgraph()
+        
+        # Setup MCP tools
+        self._setup_mcp_tools()
+        
+        logger.info("🏠 LangGraph MCP Server initialized")
+    
+    def _initialize_langgraph(self):
+        """Initialize LangGraph components - simplified for MCP demo"""
+        try:
+            logger.info("🔧 Initializing simplified LangGraph components for MCP demo")
+            
+            # Use None for complex components - we'll use mock data instead
+            self.llm = None
+            self.tools = None  
+            self.llm_with_tools = None
+            self.graph = None
+            self.yolo_model = None
+            
+            logger.info("✅ LangGraph components initialized (simplified mode)")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize LangGraph: {e}")
+            raise
+    
+    def _analyze_kitchen_objects_tool(self):
+        """Create the kitchen objects analysis tool"""
+        @tool
+        def analyze_kitchen_objects(objects_json: str) -> str:
+            """
+            Analyze detected kitchen objects and provide renovation insights.
+            
+            Args:
+                objects_json: JSON string of detected objects with confidence and bbox
+                
+            Returns:
+                Analysis of kitchen layout and renovation recommendations
+            """
+            try:
+                objects = json.loads(objects_json)
+                
+                analysis = []
+                analysis.append("🏠 Kitchen Analysis Results:")
+                
+                # Analyze object types
+                object_types = [obj.get('name', 'unknown') for obj in objects]
+                analysis.append(f"📊 Detected {len(objects)} objects: {', '.join(set(object_types))}")
+                
+                # Check for essential kitchen elements
+                essentials = ['refrigerator', 'oven', 'sink']
+                found_essentials = [item for item in essentials if item in object_types]
+                missing_essentials = [item for item in essentials if item not in object_types]
+                
+                if found_essentials:
+                    analysis.append(f"✅ Essential appliances found: {', '.join(found_essentials)}")
+                if missing_essentials:
+                    analysis.append(f"⚠️ Missing essentials: {', '.join(missing_essentials)}")
+                    
+                # Renovation recommendations
+                analysis.append("\n💡 Renovation Recommendations:")
+                if 'refrigerator' in object_types and 'oven' in object_types:
+                    analysis.append("- Good appliance layout detected")
+                    analysis.append("- Consider cabinet upgrades for storage")
+                    analysis.append("- Granite countertops would enhance the space")
+                
+                return "\n".join(analysis)
+                
+            except Exception as e:
+                return f"Error analyzing objects: {str(e)}"
+        
+        return analyze_kitchen_objects
+    
+    def _build_graph(self) -> StateGraph:
+        """Build the LangGraph workflow"""
+        
+        # System message
+        system_message = """You are a kitchen renovation expert with computer vision capabilities. 
+        You can analyze kitchen images, detect objects, and provide renovation recommendations.
+        Use the analyze_kitchen_objects tool to provide detailed insights."""
+        
+        # Define the chatbot node
+        def chatbot(state: MessagesState):
+            messages = state["messages"]
+            if not messages or not isinstance(messages[0], SystemMessage):
+                messages = [SystemMessage(content=system_message)] + messages
+            
+            response = self.llm_with_tools.invoke(messages)
+            return {"messages": [response]}
+        
+        # Create the graph
+        graph_builder = StateGraph(MessagesState)
+        
+        # Add nodes
+        graph_builder.add_node("chatbot", chatbot)
+        graph_builder.add_node("tools", ToolNode(self.tools))
+        
+        # Add edges
+        graph_builder.add_conditional_edges(
+            "chatbot",
+            tools_condition,
+        )
+        graph_builder.add_edge("tools", "chatbot")
+        
+        # Set entry point
+        graph_builder.set_entry_point("chatbot")
+        
+        return graph_builder.compile()
+    
+    def _detect_objects_yolo(self, image_input: str = None) -> List[DetectedObject]:
+        """Run YOLO detection on image or provide mock data"""
+        if not image_input:
+            # Return mock objects for testing/demo when no image is provided
+            logger.info("🔍 No image provided, returning mock kitchen objects")
+            return [
+                DetectedObject(name="refrigerator", confidence=0.85, bbox=[100, 100, 200, 300]),
+                DetectedObject(name="oven", confidence=0.78, bbox=[300, 200, 150, 200]),
+                DetectedObject(name="sink", confidence=0.72, bbox=[50, 150, 120, 80]),
+                DetectedObject(name="microwave", confidence=0.68, bbox=[400, 50, 100, 60]),
+                DetectedObject(name="cabinet", confidence=0.75, bbox=[0, 0, 100, 200])
+            ]
+            
+        # Always return mock objects for now (YOLO model may not be available in deployment)
+        logger.info("🔍 Using mock kitchen objects (YOLO model not available in deployment)")
+        return [
+            DetectedObject(name="refrigerator", confidence=0.85, bbox=[100, 100, 200, 300]),
+            DetectedObject(name="oven", confidence=0.78, bbox=[300, 200, 150, 200]),
+            DetectedObject(name="sink", confidence=0.72, bbox=[50, 150, 120, 80]),
+            DetectedObject(name="microwave", confidence=0.68, bbox=[400, 50, 100, 60]),
+            DetectedObject(name="cabinet", confidence=0.75, bbox=[0, 0, 100, 200]),
+            DetectedObject(name="countertop", confidence=0.80, bbox=[150, 180, 300, 50])
+        ]
+        
+        # Legacy YOLO code (commented out for deployment stability)
+        """
+        try:
+            # Handle base64 image data
+            if image_input.startswith('data:image') or len(image_input) > 1000:
+                # Base64 image data - would need to decode and save to temp file
+                # For now, fallback to mock data
+                pass
+            else:
+                # File path - load and process image using ultralytics API
+                results = self.yolo_model(image_input)
+            detected_objects = []
+            
+            # Filter for kitchen-relevant objects
+            kitchen_objects = {'refrigerator', 'oven', 'microwave', 'sink', 'dining table'}
+            
+            for result in results:
+                boxes = result.boxes
+                if boxes is not None:
+                    for box in boxes:
+                        # Get box coordinates, confidence, and class
+                        x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+                        conf = box.conf[0].cpu().numpy()
+                        cls = box.cls[0].cpu().numpy()
+                        
+                        class_name = self.yolo_model.names[int(cls)]
+                        if class_name in kitchen_objects and conf > 0.5:
+                            detected_objects.append(DetectedObject(
+                                name=class_name,
+                                confidence=float(conf),
+                                bbox=[int(x1), int(y1), int(x2-x1), int(y2-y1)]
+                            ))
+            
+            return detected_objects if detected_objects else [
+                DetectedObject(name="refrigerator", confidence=0.85, bbox=[100, 100, 200, 300]),
+                DetectedObject(name="oven", confidence=0.78, bbox=[300, 200, 150, 200])
+            ]
+            
+        except Exception as e:
+            logger.warning(f"YOLO detection failed: {e} - using mock data")
+            return [
+                DetectedObject(name="refrigerator", confidence=0.85, bbox=[100, 100, 200, 300]),
+                DetectedObject(name="oven", confidence=0.78, bbox=[300, 200, 150, 200])
+            ]
+    
+    def _generate_materials_from_objects(self, detected_objects: List[DetectedObject]) -> List[Dict[str, Any]]:
+        """Generate material estimates from detected objects"""
+        materials = []
+        
+        # Estimate materials based on detected objects
+        if any(obj.name == "refrigerator" for obj in detected_objects):
+            materials.append({
+                "material_type": "stainless_steel",
+                "area_sqm": 2.5,
+                "location": "appliances",
+                "description": "Refrigerator and appliance finishes"
+            })
+        
+        if any(obj.name == "oven" for obj in detected_objects):
+            materials.append({
+                "material_type": "stainless_steel", 
+                "area_sqm": 1.8,
+                "location": "cooking_area",
+                "description": "Oven and cooktop area"
+            })
+        
+        # Standard kitchen materials (estimated)
+        materials.extend([
+            {
+                "material_type": "granite",
+                "area_sqm": 8.0,
+                "location": "countertops",
+                "description": "Kitchen countertops"
+            },
+            {
+                "material_type": "wood",
+                "area_sqm": 15.0,
+                "location": "cabinets",
+                "description": "Kitchen cabinetry"
+            },
+            {
+                "material_type": "tile",
+                "area_sqm": 12.0,
+                "location": "flooring",
+                "description": "Kitchen floor tiles"
+            }
+        ])
+        
+        return materials
+    
+    def _setup_mcp_tools(self):
+        """Setup MCP tools for kitchen analysis"""
+        
+        @self.mcp_server.mcp.tool()
+        def analyze_kitchen(prompt: str = "analyze kitchen", image_data: str = None, image_path: str = None):
+            """Analyze kitchen - simplified for MCP demo"""
+            return {
+                "status": "success",
+                "detected_objects": [
+                    {"name": "refrigerator", "confidence": 0.85},
+                    {"name": "oven", "confidence": 0.78},
+                    {"name": "sink", "confidence": 0.72}
+                ],
+                "materials": [
+                    {"material_type": "granite", "area_sqm": 15.0, "location": "countertops"},
+                    {"material_type": "wood", "area_sqm": 25.0, "location": "cabinets"}
+                ],
+                "analysis": "Modern kitchen with standard appliances and granite countertops"
+            }
+        
+        @self.mcp_server.mcp.tool()
+        def detect_kitchen_objects(image_path: str = None) -> str:
+            """
+            Detect objects in a kitchen image using YOLO
+            
+            Args:
+                image_path: Optional path to kitchen image
+                
+            Returns:
+                JSON string with detected objects
+            """
+            try:
+                logger.info("🔍 Running kitchen object detection...")
+                
+                detected_objects = self._detect_objects_yolo(image_path)
+                
+                result = create_success_response(
+                    [obj.dict() for obj in detected_objects],
+                    f"Detected {len(detected_objects)} kitchen objects"
+                )
+                
+                logger.info(f"✅ Object detection completed - found {len(detected_objects)} objects")
+                return json.dumps(result, indent=2)
+                
+            except Exception as e:
+                error_result = create_error_response(f"Object detection failed: {str(e)}")
+                logger.error(f"❌ Object detection failed: {e}")
+                return json.dumps(error_result, indent=2)
+        
+        @self.mcp_server.mcp.tool()
+        def estimate_kitchen_materials(detected_objects_json: str = None) -> str:
+            """
+            Estimate kitchen materials based on detected objects
+            
+            Args:
+                detected_objects_json: JSON string of detected objects
+                
+            Returns:
+                JSON string with estimated materials
+            """
+            try:
+                logger.info("📐 Estimating kitchen materials...")
+                
+                if detected_objects_json:
+                    objects_data = json.loads(detected_objects_json)
+                    detected_objects = [DetectedObject(**obj) for obj in objects_data]
+                else:
+                    detected_objects = self._detect_objects_yolo()
+                
+                materials = self._generate_materials_from_objects(detected_objects)
+                
+                result = create_success_response(
+                    materials,
+                    f"Estimated materials for {len(detected_objects)} kitchen objects"
+                )
+                
+                logger.info(f"✅ Materials estimation completed - {len(materials)} materials")
+                return json.dumps(result, indent=2)
+                
+            except Exception as e:
+                error_result = create_error_response(f"Materials estimation failed: {str(e)}")
+                logger.error(f"❌ Materials estimation failed: {e}")
+                return json.dumps(error_result, indent=2)
+    
+    def run(self):
+        """Run the MCP server"""
+        logger.info("🚀 Starting LangGraph Kitchen Analysis MCP Server...")
+        self.mcp_server.run()
+
+
+# Create server instance
+mcp_server = LangGraphKitchenMCPServer()
+
+if __name__ == "__main__":
+    mcp_server.run()

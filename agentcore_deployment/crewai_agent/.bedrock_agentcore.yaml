@@ -1,0 +1,86 @@
+default_agent: crewai_agent_mcp
+agents:
+  crewai_agent:
+    name: crewai_agent
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/crewai_agent/crewai_agent.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AgentCore-crewai_agent-Role
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-crewai_agent
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: crewai_agent-J93te7CbkT
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/crewai_agent-J93te7CbkT
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-crewai_agent-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-a11eebcdc6
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null
+  crewai_agent_mcp:
+    name: crewai_agent_mcp
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/crewai_agent/crewai_mcp_server.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKRuntime-us-west-2-ea9d3fc7b1
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-crewai_agent_mcp
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: MCP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: crewai_agent_mcp-dGPquA2ktv
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/crewai_agent_mcp-dGPquA2ktv
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-crewai_agent_mcp-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-ea9d3fc7b1
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null
+  crewai_agent_mcp_sigv4:
+    name: crewai_agent_mcp_sigv4
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/crewai_agent/crewai_mcp_server.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKRuntime-us-west-2-ea9d3fc7b1
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-crewai_agent_mcp_sigv4
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: MCP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: crewai_agent_mcp_sigv4-TATYtBG15a
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/crewai_agent_mcp_sigv4-TATYtBG15a
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-crewai_agent_mcp_sigv4-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-13a14115b1
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null

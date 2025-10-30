@@ -1,0 +1,194 @@
+{
+  "test_session_id": "test_1758010626",
+  "timestamp": "2025-09-16T18:17:06.024327",
+  "region": "us-west-2",
+  "tests": {
+    "agent_discovery": {
+      "test_name": "agent_discovery",
+      "status": "passed",
+      "discovered_agents": 3,
+      "agents": [
+        "langgraph_agent",
+        "crewai_agent",
+        "orchestrator_agent"
+      ],
+      "details": {
+        "langgraph_agent": [
+          {
+            "error": "Failed to list tools for langgraph_agent: unhandled errors in a TaskGroup (1 sub-exception)"
+          }
+        ],
+        "crewai_agent": [
+          {
+            "error": "Failed to list tools for crewai_agent: unhandled errors in a TaskGroup (1 sub-exception)"
+          }
+        ],
+        "orchestrator_agent": [
+          {
+            "error": "Failed to list tools for orchestrator_agent: unhandled errors in a TaskGroup (1 sub-exception)"
+          }
+        ]
+      }
+    },
+    "individual_agent_langgraph_agent": {
+      "test_name": "individual_agent_langgraph_agent",
+      "agent_name": "langgraph_agent",
+      "subtests": {
+        "health_check": {
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke health_check on langgraph_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "langgraph_agent",
+            "tool_name": "health_check"
+          }
+        },
+        "tool_listing": {
+          "status": "failed",
+          "tool_count": 1,
+          "tools": [
+            {
+              "error": "Failed to list tools for langgraph_agent: unhandled errors in a TaskGroup (1 sub-exception)"
+            }
+          ]
+        },
+        "kitchen_analysis": {
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke analyze_kitchen on langgraph_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "langgraph_agent",
+            "tool_name": "analyze_kitchen"
+          }
+        }
+      },
+      "status": "failed"
+    },
+    "individual_agent_crewai_agent": {
+      "test_name": "individual_agent_crewai_agent",
+      "agent_name": "crewai_agent",
+      "subtests": {
+        "health_check": {
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke health_check on crewai_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "crewai_agent",
+            "tool_name": "health_check"
+          }
+        },
+        "tool_listing": {
+          "status": "failed",
+          "tool_count": 1,
+          "tools": [
+            {
+              "error": "Failed to list tools for crewai_agent: unhandled errors in a TaskGroup (1 sub-exception)"
+            }
+          ]
+        },
+        "cost_estimation": {
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke estimate_renovation_costs on crewai_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "crewai_agent",
+            "tool_name": "estimate_renovation_costs"
+          }
+        }
+      },
+      "status": "failed"
+    },
+    "individual_agent_orchestrator_agent": {
+      "test_name": "individual_agent_orchestrator_agent",
+      "agent_name": "orchestrator_agent",
+      "subtests": {
+        "health_check": {
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke health_check on orchestrator_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "orchestrator_agent",
+            "tool_name": "health_check"
+          }
+        },
+        "tool_listing": {
+          "status": "failed",
+          "tool_count": 1,
+          "tools": [
+            {
+              "error": "Failed to list tools for orchestrator_agent: unhandled errors in a TaskGroup (1 sub-exception)"
+            }
+          ]
+        },
+        "workflow_orchestration": {
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke orchestrate_full_workflow on orchestrator_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "orchestrator_agent",
+            "tool_name": "orchestrate_full_workflow"
+          }
+        }
+      },
+      "status": "failed"
+    },
+    "authentication": {
+      "test_name": "authentication",
+      "agent_auth_tests": {
+        "langgraph_agent": {
+          "status": "failed",
+          "has_token": false,
+          "token_length": 0
+        },
+        "crewai_agent": {
+          "status": "failed",
+          "has_token": false,
+          "token_length": 0
+        },
+        "orchestrator_agent": {
+          "status": "failed",
+          "has_token": false,
+          "token_length": 0
+        }
+      },
+      "status": "failed"
+    },
+    "end_to_end_workflow": {
+      "test_name": "end_to_end_workflow",
+      "workflow_steps": [
+        {
+          "step": 1,
+          "name": "kitchen_analysis",
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke analyze_kitchen on langgraph_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "langgraph_agent",
+            "tool_name": "analyze_kitchen"
+          }
+        },
+        {
+          "step": 2,
+          "name": "cost_estimation",
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke estimate_renovation_costs on crewai_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "crewai_agent",
+            "tool_name": "estimate_renovation_costs"
+          }
+        },
+        {
+          "step": 3,
+          "name": "orchestration",
+          "status": "failed",
+          "result": {
+            "error": "Failed to invoke orchestrate_full_workflow on orchestrator_agent: unhandled errors in a TaskGroup (1 sub-exception)",
+            "agent_name": "orchestrator_agent",
+            "tool_name": "orchestrate_full_workflow"
+          }
+        }
+      ],
+      "status": "failed"
+    }
+  },
+  "summary": {
+    "total_tests": 6,
+    "passed": 1,
+    "failed": 5,
+    "errors": 0,
+    "success_rate": 16.666666666666664
+  }
+}

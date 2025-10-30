@@ -1,0 +1,22 @@
+{
+    "Name": "TransactionSearchPolicy",
+    "Description": "Enable transaction search for GenAI observability in CloudWatch",
+    "Version": "2021-06-01",
+    "Statement": [
+        {
+            "Sid": "EnableTransactionSearch",
+            "DataIdentifier": [
+                "arn:aws:dataprotection::aws:data-identifier/Transaction"
+            ],
+            "Operation": {
+                "Audit": {
+                    "FindingsDestination": {
+                        "CloudWatchLogs": {
+                            "LogGroup": "/aws/dataprotection/transaction-search"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

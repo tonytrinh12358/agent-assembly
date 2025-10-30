@@ -1,0 +1,31 @@
+# Core ML and Computer Vision
+torch>=2.8.0
+torchvision>=0.23.0
+transformers>=4.56.0
+safetensors>=0.6.2
+pillow>=11.3.0
+numpy>=1.23.0,<2.2.0
+
+# Multi-Agent Frameworks
+langgraph>=0.6.6
+crewai>=0.177.0
+crewai-tools>=0.0.1
+strands-agents
+strands-agents-tools
+
+# AWS and Bedrock Integration
+boto3>=1.40.0
+langchain-aws>=0.2.31
+langchain-core>=0.3.75
+
+# Data Processing and Validation
+pydantic>=2.11.0
+pandas>=2.3.0
+
+# Web UI
+streamlit>=1.28.0
+
+# Utilities
+requests>=2.32.0
+python-dotenv>=1.1.0
+tqdm>=4.67.0

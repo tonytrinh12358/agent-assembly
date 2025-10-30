@@ -1,0 +1,156 @@
+{
+  "timestamp": "2025-09-07T07:27:28.438000",
+  "detection": {
+    "image_path": "/home/ubuntu/workspace/TechSummit_2025/sample_images/img_1.jpg",
+    "detected_objects": [
+      {
+        "name": "refrigerator",
+        "confidence": 0.8103958368301392,
+        "bbox": [
+          1076,
+          377,
+          327,
+          324
+        ]
+      },
+      {
+        "name": "oven",
+        "confidence": 0.7450956106185913,
+        "bbox": [
+          428,
+          641,
+          371,
+          141
+        ]
+      }
+    ],
+    "materials": [
+      {
+        "material_type": "stainless_steel",
+        "area_sqm": 9.842809364548495,
+        "location": "refrigerator"
+      },
+      {
+        "material_type": "stainless_steel",
+        "area_sqm": 4.859810479375697,
+        "location": "oven"
+      },
+      {
+        "material_type": "wood",
+        "area_sqm": 14.0,
+        "location": "cabinet"
+      },
+      {
+        "material_type": "granite",
+        "area_sqm": 7.5,
+        "location": "countertop"
+      },
+      {
+        "material_type": "tile",
+        "area_sqm": 18.5,
+        "location": "flooring"
+      }
+    ],
+    "measurements": {
+      "total_kitchen_area": 40.0,
+      "cabinet_area": 14.0,
+      "countertop_area": 7.5,
+      "flooring_area": 18.5,
+      "appliance_count": 2
+    },
+    "bedrock_analysis": "1. Kitchen Layout Assessment:\nThe detected refrigerator and oven indicate this is likely a galley or corridor style kitchen layout. The appliances seem well positioned, though a sink was not detected which is an essential missing element.\n\n2. Renovation Recommendations:\n- Maintain the current appliance locations as the layout is functional\n- Add a new sink and faucet near the oven for a work triangle flow\n- Upgrade cabinets to maximize storage, consider floor to ceiling cabinetry\n- Open shelving can provide display storage and make the space feel larger\n\n3. Material Suggestions:\n- Granite or quartz countertops add durability and elevate the look\n- Solid wood cabinets have a high-end look, consider a two-tone color scheme \n- Subway tile backsplash is a classic, on-trend choice\n- Luxury vinyl plank (LVP) flooring is water-resistant and looks like wood\n\n4. Cost Considerations for Australian Market:\n- Cabinet refacing starts around $5,000 AUD, full cabinet replacement $15,000+\n- Granite countertops $100-200 per square foot installed \n- Appliance costs vary, $2,000+ for fridge, $1,000+ for oven\n- Professional installation fees for plumbing, electrical, etc.\n- Overall expect $20,000 - $40,000 AUD for a mid-range renovation\n\nLet me know if you need any other details! Proper planning for layout, materials and budget will ensure a beautiful, functional new kitchen.",
+    "status": "completed"
+  },
+  "costs": {
+    "project_name": "Australian Kitchen Renovation",
+    "cost_summary": {
+      "material_costs": {
+        "stainless_steel_appliances": {
+          "area_sqm": 14.7,
+          "cost_per_sqm": 850.0,
+          "total_cost": 12495.0
+        },
+        "wood_cabinets": {
+          "area_sqm": 14.0,
+          "cost_per_sqm": 350.0,
+          "total_cost": 4900.0
+        },
+        "granite_countertops": {
+          "area_sqm": 7.5,
+          "cost_per_sqm": 800.0,
+          "total_cost": 6000.0
+        },
+        "tile_flooring": {
+          "area_sqm": 18.5,
+          "cost_per_sqm": 120.0,
+          "total_cost": 2220.0
+        },
+        "total_material_cost": 25615.0
+      },
+      "labor_costs": {
+        "cabinet_installation": {
+          "area_sqm": 14.0,
+          "base_rate": 100.0,
+          "adjusted_rate": 110.0,
+          "total_cost": 1540.0
+        },
+        "granite_countertop_installation": {
+          "area_sqm": 7.5,
+          "base_rate": 125.0,
+          "adjusted_rate": 144.0,
+          "total_cost": 1080.0
+        },
+        "tile_flooring_installation": {
+          "area_sqm": 18.5,
+          "base_rate": 75.0,
+          "adjusted_rate": 75.0,
+          "total_cost": 1387.5
+        },
+        "appliance_installation": {
+          "units": 2,
+          "base_rate": 250.0,
+          "adjusted_rate": 300.0,
+          "total_cost": 600.0
+        },
+        "site_preparation_cleanup": {
+          "hours": 8,
+          "hourly_rate": 65.0,
+          "total_cost": 520.0
+        },
+        "project_management": {
+          "percentage": 10,
+          "total_cost": 512.75
+        },
+        "total_labor_cost": 5640.25
+      },
+      "cost_calculations": {
+        "base_cost": {
+          "materials": 25615.0,
+          "labor": 5640.25,
+          "subtotal": 31255.25
+        },
+        "contingency": {
+          "percentage": 15,
+          "amount": 4688.29
+        },
+        "total_project_cost": 35943.54,
+        "total_area_sqm": 18.5,
+        "cost_per_sqm": 1942.89,
+        "budget_range": {
+          "low_estimate": 30552.01,
+          "high_estimate": 41335.07
+        }
+      }
+    },
+    "notes": [
+      "All costs are in Australian Dollars (AUD) and include GST",
+      "Contingency covers unexpected expenses and minor variations",
+      "Cost per square metre is based on the floor area of the kitchen",
+      "Budget range represents a \u00b115% variance to account for potential price fluctuations",
+      "Material costs represent approximately 82% of base costs before contingency",
+      "Labor costs represent approximately 18% of base costs before contingency",
+      "Regional variations across Australia may affect final pricing"
+    ]
+  },
+  "status": "success"
+}

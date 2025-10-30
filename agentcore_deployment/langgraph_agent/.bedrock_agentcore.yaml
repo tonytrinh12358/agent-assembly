@@ -1,0 +1,86 @@
+default_agent: langgraph_agent_mcp
+agents:
+  langgraph_agent:
+    name: langgraph_agent
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/langgraph_agent/langgraph_agent.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AgentCore-langgraph_agent-Role
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-langgraph_agent
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: langgraph_agent-bH2lUr45Jq
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/langgraph_agent-bH2lUr45Jq
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-langgraph_agent-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-cc650878d6
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null
+  langgraph_agent_mcp:
+    name: langgraph_agent_mcp
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/langgraph_agent/langgraph_mcp_server.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKRuntime-us-west-2-dd77a9bdeb
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-langgraph_agent_mcp
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: MCP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: langgraph_agent_mcp-os4XPLBsXn
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/langgraph_agent_mcp-os4XPLBsXn
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-langgraph_agent_mcp-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-dd77a9bdeb
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null
+  langgraph_agent_mcp_sigv4:
+    name: langgraph_agent_mcp_sigv4
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/langgraph_agent/langgraph_mcp_server.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKRuntime-us-west-2-dd77a9bdeb
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-langgraph_agent_mcp_sigv4
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: MCP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: langgraph_agent_mcp_sigv4-TgmNK9BNyB
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/langgraph_agent_mcp_sigv4-TgmNK9BNyB
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-langgraph_agent_mcp_sigv4-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-f472a0a96c
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null

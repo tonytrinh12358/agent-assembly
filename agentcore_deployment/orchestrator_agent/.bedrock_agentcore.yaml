@@ -1,0 +1,114 @@
+default_agent: orchestrator_agent_mcp
+agents:
+  orchestrator_agent:
+    name: orchestrator_agent
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/orchestrator_agent/orchestrator_agent.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AgentCore-orchestrator_agent-Role
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-orchestrator_agent
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: orchestrator_agent-wO9MODGRe9
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/orchestrator_agent-wO9MODGRe9
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-orchestrator_agent-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-00cafffea8
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null
+  mcp_orchestrator_agent:
+    name: mcp_orchestrator_agent
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/orchestrator_agent/basic_mcp_orchestrator.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AgentCore-mcp_orchestrator_agent-Role
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-mcp_orchestrator_agent
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: mcp_orchestrator_agent-yeUihPGh1y
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/mcp_orchestrator_agent-yeUihPGh1y
+      agent_session_id: null
+    codebuild:
+      project_name: null
+      execution_role: null
+      source_bucket: null
+    authorizer_configuration: null
+    oauth_configuration: null
+  orchestrator_agent_mcp:
+    name: orchestrator_agent_mcp
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/orchestrator_agent/orchestrator_mcp_server.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKRuntime-us-west-2-126e363cbf
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-orchestrator_agent_mcp
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: MCP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: orchestrator_agent_mcp-6tVnRxEENq
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/orchestrator_agent_mcp-6tVnRxEENq
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-orchestrator_agent_mcp-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-126e363cbf
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null
+  orchestrator_agent_mcp_sigv4:
+    name: orchestrator_agent_mcp_sigv4
+    entrypoint: /Users/totrinh/Library/CloudStorage/OneDrive-amazon.com/workspace/agent-assemble/TechSummit_2025/agentcore_deployment/orchestrator_agent/orchestrator_mcp_server.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKRuntime-us-west-2-126e363cbf
+      execution_role_auto_create: false
+      account: 'your_account_id'
+      region: us-west-2
+      ecr_repository: your_account_id.dkr.ecr.us-west-2.amazonaws.com/bedrock-agentcore-orchestrator_agent_mcp_sigv4
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: MCP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: orchestrator_agent_mcp_sigv4-EPCJhlANlP
+      agent_arn: arn:aws:bedrock-agentcore:us-west-2:your_account_id:runtime/orchestrator_agent_mcp_sigv4-EPCJhlANlP
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-orchestrator_agent_mcp_sigv4-builder
+      execution_role: arn:aws:iam::your_account_id:role/AmazonBedrockAgentCoreSDKCodeBuild-us-west-2-4048c8797d
+      source_bucket: bedrock-agentcore-codebuild-sources-your_account_id-us-west-2
+    authorizer_configuration: null
+    oauth_configuration: null
